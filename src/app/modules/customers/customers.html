@@ -1,0 +1,63 @@
+<h1 class="page-title">Customers</h1>
+
+<section class="toolbar card">
+  <div class="left">
+    <input
+      type="search"
+      placeholder="Search customers, email, plan, status…"
+      (input)="onSearch($any($event.target).value)"
+    />
+  </div>
+  <div class="right">
+    <label>
+      Page size:
+      <select [ngModel]="pageSize" (ngModelChange)="setPageSize($event)">
+        <option [value]="5">5</option>
+        <option [value]="10">10</option>
+        <option [value]="20">20</option>
+        <option [value]="50">50</option>
+      </select>
+    </label>
+  </div>
+</section>
+
+<section class="card table-wrap">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Customer</th>
+        <th>Email</th>
+        <th>Plan</th>
+        <th>Status</th>
+        <th>MRR</th>
+        <th>Joined</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let c of view">
+        <td>{{ c.id }}</td>
+        <td class="strong">{{ c.name }}</td>
+        <td>{{ c.email }}</td>
+        <td><span class="badge">{{ c.plan }}</span></td>
+        <td>
+          <span class="pill" [class.pastdue]="c.status==='Past Due'"
+                           [class.canceled]="c.status==='Canceled'">
+            {{ c.status }}
+          </span>
+        </td>
+        <td>${{ c.mrr }}</td>
+        <td>{{ c.createdAt | date:'mediumDate' }}</td>
+      </tr>
+      <tr *ngIf="view.length === 0">
+        <td colspan="7" class="empty">No customers found.</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="pager card">
+  <button (click)="changePage(-1)" [disabled]="page===1">Prev</button>
+  <span>Page {{page}} / {{totalPages}}</span>
+  <button (click)="changePage(1)" [disabled]="page===totalPages">Next</button>
+</section>
